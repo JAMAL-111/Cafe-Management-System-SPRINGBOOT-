@@ -1,6 +1,7 @@
 package inn.cmss.rest;
 
 import inn.cmss.wrapper.ProductWrapper;
+import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,4 +22,13 @@ public interface ProductRest {
 
     @PostMapping(path="/delete/{id}")
     ResponseEntity<String> deleteProduct(@PathVariable Integer id);
+
+    @PostMapping(path="/updateStatus")
+    ResponseEntity<String> updateStatus(@RequestBody Map<String,String> requestMap);
+
+    @GetMapping(path="/getByCategory/{id}")
+    ResponseEntity<List<ProductWrapper>> getByCategory(@PathVariable Integer id);
+
+    @GetMapping(path="/getById/{id}")
+    ResponseEntity<ProductWrapper> getProductById(@PathVariable Integer id);
 }
