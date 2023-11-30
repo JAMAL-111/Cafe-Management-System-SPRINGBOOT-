@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -80,5 +81,29 @@ public class ProductServiceImpl implements ProductService {
             ex.printStackTrace();
         }
         return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @Override
+    public ResponseEntity<String> updateProduct(Map<String, String> requestMap) {
+        return null;
+    }
+
+    @Override
+    public ResponseEntity<String> deleteProduct(Integer id) {
+        try{
+            if (jwtFilter.isAdmin()){
+                Optional optional = productDao.findById(id);
+                if(!optional.isEmpty()){
+                    productDao.deleteById(id);
+                    return CafeUtils.getResponseEntity("Product Delete Successfully", HttpStatus.OK);
+                }
+                return CafeUtils.getResponseEntity("Product id doesn't exist",HttpStatus.OK);
+            }else{
+                return CafeUtils.getResponseEntity(CafeConstants.UNAUTHORIZED_ACCESS, HttpStatus.UNAUTHORIZED);
+            }
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
+        return CafeUtils.getResponseEntity(CafeConstants.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
